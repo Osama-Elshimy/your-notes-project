@@ -1,83 +1,126 @@
-import User from '../models/User.js';
 import { StatusCodes } from 'http-status-codes';
-import { BadRequestError, UnAuthenticatedError } from '../errors/index.js';
+import User from '../models/User.js';
 import attachCookie from '../utils/attachCookie.js';
+import { BadRequestError, UnAuthenticatedError } from '../errors/index.js';
+
 const register = async (req, res) => {
-  const { name, email, password } = req.body;
+	const { username, email, password, confirmPassword, phone, bearthYear } =
+		req.body;
 
-  if (!name || !email || !password) {
-    throw new BadRequestError('please provide all values');
-  }
-  const userAlreadyExists = await User.findOne({ email });
-  if (userAlreadyExists) {
-    throw new BadRequestError('Email already in use');
-  }
-  const user = await User.create({ name, email, password });
+	if (
+		!username ||
+		!email ||
+		!password ||
+		!confirmPassword ||
+		!phone ||
+		!bearthYear
+	) {
+		throw new BadRequestError('please provide all values');
+	}
 
-  const token = user.createJWT();
-  attachCookie({ res, token });
-  res.status(StatusCodes.CREATED).json({
-    user: {
-      email: user.email,
-      lastName: user.lastName,
-      location: user.location,
-      name: user.name,
-    },
+	const userAlreadyExists = await User.findOne({ email });
+	if (userAlreadyExists) {
+		throw new BadRequestError('Email already in use');
+	}
 
-    location: user.location,
-  });
+	if (password !== confirmPassword) {
+		throw new BadRequestError('Passwords do not match');
+	}
+
+	const user = await User.create({
+		username,
+		email,
+		password,
+		confirmPassword,
+		phone,
+		bearthYear,
+	});
+
+	const token = user.createJWT();
+	attachCookie({ res, token });
+
+	res.status(StatusCodes.CREATED).json({
+		user: {
+			email: user.email,
+			username: user.username,
+			phone: user.phone,
+			bearthYear: user.bearthYear,
+		},
+	});
 };
+
 const login = async (req, res) => {
-  const { email, password } = req.body;
-  if (!email || !password) {
-    throw new BadRequestError('Please provide all values');
-  }
-  const user = await User.findOne({ email }).select('+password');
-  if (!user) {
-    throw new UnAuthenticatedError('Invalid Credentials');
-  }
+	const { email, password } = req.body;
+	if (!email || !password) {
+		throw new BadRequestError('Please provide all values');
+	}
 
-  const isPasswordCorrect = await user.comparePassword(password);
-  if (!isPasswordCorrect) {
-    throw new UnAuthenticatedError('Invalid Credentials');
-  }
-  const token = user.createJWT();
-  attachCookie({ res, token });
-  user.password = undefined;
+	const user = await User.findOne({ email }).select('+password');
 
-  res.status(StatusCodes.OK).json({ user, location: user.location });
+	if (!user) {
+		throw new UnAuthenticatedError('No user with that email found');
+	}
+
+	const isPasswordCorrect = await user.comparePassword(password);
+	if (!isPasswordCorrect) {
+		throw new UnAuthenticatedError('Password is not correct');
+	}
+
+	const token = user.createJWT();
+	attachCookie({ res, token });
+	user.password = undefined;
+
+	res.status(StatusCodes.OK).json({ user });
 };
+
 const updateUser = async (req, res) => {
-  const { email, name, lastName, location } = req.body;
-  if (!email || !name || !lastName || !location) {
-    throw new BadRequestError('Please provide all values');
-  }
-  const user = await User.findOne({ _id: req.user.userId });
+	const { email, username, password, confirmPassword, phone, bearthYear } =
+		req.body;
+	if (
+		!email ||
+		!username ||
+		!password ||
+		!confirmPassword ||
+		!phone ||
+		!bearthYear
+	) {
+		throw new BadRequestError('Please provide all values');
+	}
 
-  user.email = email;
-  user.name = name;
-  user.lastName = lastName;
-  user.location = location;
+	if (password !== confirmPassword) {
+		throw new BadRequestError('Passwords do not match');
+	}
 
-  await user.save();
+	const user = await User.findOne({ _id: req.user.userId }).select('+password');
 
-  const token = user.createJWT();
-  attachCookie({ res, token });
+	user.email = email;
+	user.username = username;
+	user.password = password;
+	user.confirmPassword = confirmPassword;
+	user.phone = phone;
+	user.bearthYear = bearthYear;
 
-  res.status(StatusCodes.OK).json({ user, location: user.location });
+	await user.save();
+
+	const token = user.createJWT();
+	attachCookie({ res, token });
+
+	user.password = undefined;
+
+	res.status(StatusCodes.OK).json({ user });
 };
 
 const getCurrentUser = async (req, res) => {
-  const user = await User.findOne({ _id: req.user.userId });
-  res.status(StatusCodes.OK).json({ user, location: user.location });
+	const user = await User.findOne({ _id: req.user.userId });
+	res.status(StatusCodes.OK).json({ user });
 };
 
 const logout = async (req, res) => {
-  res.cookie('token', 'logout', {
-    httpOnly: true,
-    expires: new Date(Date.now() + 1000),
-  });
-  res.status(StatusCodes.OK).json({ msg: 'user logged out!' });
+	res.cookie('token', 'logout', {
+		httpOnly: true,
+		expires: new Date(Date.now() + 1000),
+	});
+	res.status(StatusCodes.OK).json({ msg: 'user logged out!' });
 };
 
 export { register, login, updateUser, getCurrentUser, logout };
