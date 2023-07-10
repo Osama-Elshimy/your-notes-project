@@ -1,0 +1,23 @@
+:root {
+	--clr-pink: #d375b9;
+	--clr-white: #fff;
+	--clr-grey: #697386;
+	--clr-ingredient-pink: linear-gradient(
+		180deg,
+		#db9dc1 0%,
+		#db9ec1 45.31%,
+		#c7b6d5 81.25%,
+		#d477b8 100%
+	);
+
+	--clr-text-primary: var(--clr-pink);
+	--clr-text-second: var(--clr-white);
+	--clr-ingredient: var(--clr-ingredient-pink);
+
+	--font-weight-400: 400;
+	--font-weight-500: 500;
+	--font-weight-600: 600;
+	--font-weight-700: 700;
+
+	--transition-time: 0.3s;
+}

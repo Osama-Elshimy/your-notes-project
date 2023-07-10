@@ -1,0 +1,47 @@
+@import './mixins';
+
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;500;600;700&display=swap');
+
+html {
+	font-size: 62.5%;
+}
+
+body {
+	font-size: 1.6rem;
+	font-family: 'Josefin Sans', sans-serif;
+	font-weight: var(--font-weight-400);
+	color: var(--clr-text-primary);
+	background-color: var(--clr-white);
+}
+
+.wrapper {
+	margin-inline: auto;
+	margin-block-start: 1.2rem;
+	max-width: 120rem;
+}
+
+.btn {
+	font-weight: var(--font-weight-700);
+	font-size: 2rem;
+}
+
+.btn-block {
+	@include flexLayout();
+	gap: 1.2rem;
+	width: 40rem;
+	max-width: 100%;
+	padding: 0.8rem 2.4rem;
+	border-radius: 6px;
+	background-color: var(--clr-grey);
+	color: var(--clr-text-second);
+	transition: var(--transition-time);
+
+	&:hover {
+		scale: 1.1;
+	}
+}
+
+button[type='submit'] {
+	background-color: var(--clr-text-primary);
+	color: var(--clr-text-second);
+}
