@@ -2,6 +2,8 @@ import express from 'express';
 const app = express();
 import dotenv from 'dotenv';
 dotenv.config();
+
+import cors from 'cors';
 import 'express-async-errors';
 import morgan from 'morgan';
 
@@ -35,6 +37,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 // only when ready to deploy
 app.use(express.static(path.resolve(__dirname, './client/build')));
 
+app.use(cors());
 app.use(express.json());
 app.use(helmet());
 app.use(xss());

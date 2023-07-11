@@ -1,13 +1,10 @@
-@import './mixins';
+@use '../abstracts' as *;
 
 .register {
 	@include gridLayout();
-	background-color: #e0c4d6;
 	max-width: 90rem;
 	margin-inline: auto;
 	margin-top: 4.8rem;
-	box-shadow: 0 0 0 100vmax #e0c4d6;
-
 	& > * {
 		padding: 3.6rem;
 		min-height: 60vh;
@@ -33,10 +30,10 @@
 }
 
 .register__form {
-	background-color: var(--clr-white);
+	background-color: var(--clr-bg-shared);
 
 	p {
-		color: var(--clr-grey);
+		color: var(--clr-grey-dark);
 		font-weight: var(--font-weight-700);
 		font-size: 2rem;
 		text-align: center;
@@ -66,23 +63,32 @@
 		font-size: 4.8rem;
 		text-align: center;
 	}
+
+	.form__btn {
+		@include flexLayout();
+		gap: 1.2rem;
+		width: 40rem;
+	}
 }
 
 .form__row {
 	input {
 		font-size: 2rem;
-		color: var(--clr-grey);
-		background-color: var(--clr-ingredient);
 		border: 2px solid rgba(60, 66, 87, 0.122);
 		border-radius: 8px;
 		width: 40rem;
 		max-width: 100%;
 		padding: 0.5rem 1rem;
+		color: var(--clr-todo);
 	}
 
 	label {
-		color: var(--clr-grey);
-		background-color: var(--clr-ingredient);
 		font-weight: var(--font-weight-700);
+	}
+
+	input,
+	label {
+		color: var(--clr-grey-regular);
+		background-color: var(--clr-ingredient);
 	}
 }

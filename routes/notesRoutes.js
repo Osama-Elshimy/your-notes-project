@@ -5,11 +5,11 @@ import {
 	createNote,
 	deleteNote,
 	getAllNotes,
+	toggleNoteCompletion,
 } from '../controllers/notesController.js';
 
-import testUser from '../middleware/testUser.js';
-
-router.route('/').post(testUser, createNote).get(getAllNotes);
-router.route('/:id').delete(testUser, deleteNote);
+router.route('/').post(createNote).get(getAllNotes);
+router.route('/:id').delete(deleteNote);
+router.route('/:id/toggle').patch(toggleNoteCompletion);
 
 export default router;

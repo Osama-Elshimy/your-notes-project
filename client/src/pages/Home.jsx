@@ -1,11 +1,11 @@
-import Wrapper from '../components/Wrapper';
-import Navbar from '../components/Navbar';
+import { Wrapper, Navbar, Modal, NoteList } from '../components';
 
 const Home = () => {
 	return (
 		<Wrapper>
 			<Navbar />
-			<h1>Home</h1>
+			<Modal />
+			<NoteList />
 		</Wrapper>
 	);
 };

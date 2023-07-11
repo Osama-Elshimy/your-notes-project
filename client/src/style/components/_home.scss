@@ -1,0 +1,62 @@
+@use '../abstracts/' as *;
+
+.note-form {
+	@include flexLayout(center, space-between);
+	gap: 1.2rem;
+
+	input {
+		background-color: inherit;
+		border-color: transparent;
+		font-size: 2rem;
+		width: 100%;
+		padding-inline: 1rem;
+
+		&::placeholder {
+			opacity: 0.5;
+		}
+	}
+
+	button {
+		width: 40%;
+		padding-inline: 1rem;
+		border-radius: 5px;
+	}
+}
+
+.card-note {
+	@include flexLayout();
+	flex-direction: column;
+	padding-block: 3.6rem;
+	margin-block-start: 2.4rem;
+
+	& > div {
+		color: var(--clr-todo);
+		font-size: 2rem;
+	}
+}
+
+.todo {
+	@include flexLayout(center, space-between);
+	width: 100%;
+
+	& > div {
+		@include flexLayout(center, space-between);
+		gap: 2.4rem;
+	}
+
+	p {
+		color: var(--clr-todo);
+		font-size: 2rem;
+	}
+}
+
+.todo.completed {
+	p {
+		text-decoration: line-through;
+		opacity: 0.5;
+	}
+
+	circle {
+		fill: var(--clr-pink);
+	}
+}

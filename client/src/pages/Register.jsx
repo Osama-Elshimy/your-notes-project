@@ -1,14 +1,8 @@
 import { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
-import { useDispatch, useSelector } from 'react-redux';
-import {
-	registerUserStart,
-	registerUserSuccess,
-	registerUserFailure,
-} from '../store/reducers/user';
-
-import { Logo, FormRow } from '../components';
+import { useAppContext } from '../context/appContext';
+import { Logo, FormRow, Alert } from '../components';
 
 const initialState = {
 	username: '',
@@ -21,44 +15,108 @@ const initialState = {
 };
 
 const Register = () => {
-	const dispatch = useDispatch();
-	const { loading, error } = useSelector(state => state.user);
+	const navigate = useNavigate();
 
 	const [values, setValues] = useState(initialState);
-	const [step, stetStep] = useState(1);
+	const [formStep, stetFormStep] = useState(1);
 
-	const handleRegister = e => {
-		e.preventDefault();
-
-		if (step === 1) {
-			stetStep(2);
-		} else {
-			// Send data to server
-		}
-
-		dispatch(registerUserStart());
-		// Perform your API request or async logic for user registration
-		// Example: axios.post('/api/register', { username, password })
-		// Replace the above line with your actual implementation
-
-		// Simulate success
-		setTimeout(() => {
-			const user = { id: 1, username: values.username }; // Replace with actual response from the server
-			dispatch(registerUserSuccess(user));
-		}, 2000);
-
-		// Simulate failure
-		// dispatch(registerUserFailure('Registration failed')); // Uncomment this line to simulate failure
-	};
+	const {
+		user,
+		isLoaing,
+		showAlert,
+		displayAlert,
+		setupUser,
+		passwordMismatch,
+	} = useAppContext();
 
 	const handleChange = e => {
 		setValues({ ...values, [e.target.name]: e.target.value });
 	};
-	const toggleMember = () => {
-		if (step === 2) stetStep(1);
 
+	const toggleMember = () => {
+		stetFormStep(1);
 		setValues({ ...values, isMember: !values.isMember });
 	};
+
+	const formStepHandler = () => {
+		if (!values.isMember && formStep === 1) {
+			stetFormStep(2);
+			return;
+		}
+	};
+
+	const onSubmit = e => {
+		e.preventDefault();
+
+		const {
+			username,
+			email,
+			password,
+			confirmPassword,
+			phone,
+			birthYear,
+			isMember,
+		} = values;
+
+		if (formStep === 1) {
+			if (!email || !password || (!isMember && !confirmPassword)) {
+				displayAlert();
+				return;
+			}
+		}
+
+		if (!isMember && password !== confirmPassword) {
+			passwordMismatch();
+			return;
+		}
+
+		formStepHandler();
+
+		if (formStep === 2) {
+			if (!username || !phone || !birthYear) {
+				displayAlert();
+				return;
+			}
+		}
+
+		let currentUser;
+
+		if (isMember) {
+			currentUser = {
+				email,
+				password,
+			};
+
+			setupUser({
+				currentUser,
+				endPoint: 'login',
+				alertText: 'Login Successful! Redirecting...',
+			});
+		} else {
+			currentUser = {
+				email,
+				password,
+				confirmPassword,
+				username,
+				phone,
+				birthYear,
+			};
+
+			setupUser({
+				currentUser,
+				endPoint: 'register',
+				alertText: 'User Created! Redirecting...',
+			});
+		}
+	};
+
+	useEffect(() => {
+		if (user) {
+			setTimeout(() => {
+				navigate('/');
+			}, 1500);
+		}
+	}, [user, navigate]);
 
 	return (
 		<section className='register'>
@@ -68,10 +126,18 @@ const Register = () => {
 			</div>
 
 			<div className='register__form'>
-				<form className='form'>
-					<h2>{step === 1 ? 'Signup' : 'Complete Signup'}</h2>
+				<form className='form' onSubmit={onSubmit}>
+					<h2>
+						{values.isMember
+							? 'Login'
+							: formStep === 1
+							? 'Signup'
+							: 'Complete Signup'}
+					</h2>
 
-					{step === 1 && (
+					{showAlert && <Alert />}
+
+					{formStep === 1 && (
 						<FormRow
 							type='email'
 							name='email'
@@ -80,7 +146,7 @@ const Register = () => {
 						/>
 					)}
 
-					{step === 1 && (
+					{formStep === 1 && (
 						<FormRow
 							type='password'
 							name='password'
@@ -89,7 +155,7 @@ const Register = () => {
 						/>
 					)}
 
-					{step === 1 && !values.isMember && (
+					{formStep === 1 && !values.isMember && (
 						<FormRow
 							labelText='Confirm Password'
 							type='password'
@@ -99,7 +165,7 @@ const Register = () => {
 						/>
 					)}
 
-					{step === 2 && !values.isMember && (
+					{formStep === 2 && !values.isMember && (
 						<FormRow
 							type='text'
 							name='username'
@@ -108,7 +174,7 @@ const Register = () => {
 						/>
 					)}
 
-					{step === 2 && !values.isMember && (
+					{formStep === 2 && !values.isMember && (
 						<FormRow
 							type='text'
 							name='phone'
@@ -117,7 +183,7 @@ const Register = () => {
 						/>
 					)}
 
-					{step === 2 && !values.isMember && (
+					{formStep === 2 && !values.isMember && (
 						<FormRow
 							labelText='Birth Year'
 							type='text'
@@ -129,12 +195,15 @@ const Register = () => {
 						/>
 					)}
 
+					{values.isMember && (
+						<button className='btn btn-block form__btn' type='submit'>
+							Login
+						</button>
+					)}
+
 					{!values.isMember && (
-						<button
-							className='btn btn-block'
-							type='submit'
-							onClick={handleRegister}>
-							Complete Signup{' '}
+						<button className='btn btn-block form__btn' type='submit'>
+							Complete Signup
 							<svg
 								width='17'
 								height='17'
@@ -159,11 +228,11 @@ const Register = () => {
 						</button>
 					)}
 
-					{step === 2 && (
+					{formStep === 2 && (
 						<button
-							className='btn btn-block'
+							className='btn btn-block form__btn'
 							type='button'
-							onClick={() => stetStep(1)}>
+							onClick={() => stetFormStep(1)}>
 							Back
 							<svg
 								width='17'

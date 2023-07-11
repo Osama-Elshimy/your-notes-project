@@ -1,6 +1,8 @@
+@use './abstracts';
 @use './components/reset';
 @use './components/global';
-@use './components/variables';
-@use './components/mixins';
+@use './components/home';
 @use './components/nav';
+@use './components/modify-user';
 @use './components/register';
+@use './components/theme';

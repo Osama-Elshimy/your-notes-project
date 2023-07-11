@@ -1,11 +1,14 @@
 import { StatusCodes } from 'http-status-codes';
 import User from '../models/User.js';
-import attachCookie from '../utils/attachCookie.js';
 import { BadRequestError, UnAuthenticatedError } from '../errors/index.js';
 
 const register = async (req, res) => {
-	const { username, email, password, confirmPassword, phone, bearthYear } =
+	const { username, email, password, confirmPassword, phone, birthYear } =
 		req.body;
+
+	if (password !== confirmPassword) {
+		throw new BadRequestError('Passwords do not match');
+	}
 
 	if (
 		!username ||
@@ -13,7 +16,7 @@ const register = async (req, res) => {
 		!password ||
 		!confirmPassword ||
 		!phone ||
-		!bearthYear
+		!birthYear
 	) {
 		throw new BadRequestError('please provide all values');
 	}
@@ -23,29 +26,23 @@ const register = async (req, res) => {
 		throw new BadRequestError('Email already in use');
 	}
 
-	if (password !== confirmPassword) {
-		throw new BadRequestError('Passwords do not match');
-	}
-
 	const user = await User.create({
 		username,
 		email,
 		password,
-		confirmPassword,
 		phone,
-		bearthYear,
+		birthYear,
 	});
-
 	const token = user.createJWT();
-	attachCookie({ res, token });
 
 	res.status(StatusCodes.CREATED).json({
 		user: {
 			email: user.email,
 			username: user.username,
 			phone: user.phone,
-			bearthYear: user.bearthYear,
+			birthYear: user.birthYear,
 		},
+		token,
 	});
 };
 
@@ -67,60 +64,39 @@ const login = async (req, res) => {
 	}
 
 	const token = user.createJWT();
-	attachCookie({ res, token });
 	user.password = undefined;
 
-	res.status(StatusCodes.OK).json({ user });
+	res.status(StatusCodes.OK).json({ user, token });
 };
 
 const updateUser = async (req, res) => {
-	const { email, username, password, confirmPassword, phone, bearthYear } =
-		req.body;
-	if (
-		!email ||
-		!username ||
-		!password ||
-		!confirmPassword ||
-		!phone ||
-		!bearthYear
-	) {
+	const { email, username, password, phone, birthYear } = req.body;
+	if (!email || !username || !password || !phone || !birthYear) {
 		throw new BadRequestError('Please provide all values');
 	}
 
-	if (password !== confirmPassword) {
-		throw new BadRequestError('Passwords do not match');
-	}
-
 	const user = await User.findOne({ _id: req.user.userId }).select('+password');
+	console.log(user);
 
 	user.email = email;
 	user.username = username;
 	user.password = password;
-	user.confirmPassword = confirmPassword;
 	user.phone = phone;
-	user.bearthYear = bearthYear;
+	user.birthYear = birthYear;
 
 	await user.save();
 
 	const token = user.createJWT();
-	attachCookie({ res, token });
 
 	user.password = undefined;
+	console.log(user);
 
-	res.status(StatusCodes.OK).json({ user });
+	res.status(StatusCodes.OK).json({ user, token });
 };
 
 const getCurrentUser = async (req, res) => {
 	const user = await User.findOne({ _id: req.user.userId });
-	res.status(StatusCodes.OK).json({ user });
+	res.status(StatusCodes.OK).json({ user, token });
 };
 
-const logout = async (req, res) => {
-	res.cookie('token', 'logout', {
-		httpOnly: true,
-		expires: new Date(Date.now() + 1000),
-	});
-	res.status(StatusCodes.OK).json({ msg: 'user logged out!' });
-};
-
-export { register, login, updateUser, getCurrentUser, logout };
+export { register, login, updateUser, getCurrentUser };

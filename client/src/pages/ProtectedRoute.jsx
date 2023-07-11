@@ -1,4 +1,11 @@
+import { Navigate } from 'react-router-dom';
+
+import { useAppContext } from '../context/appContext';
+
 const ProtectedRoute = ({ children }) => {
-	return <div>{children}</div>;
+	const { user } = useAppContext();
+
+	return user ? children : <Navigate to='/register' />;
 };
+
 export default ProtectedRoute;
