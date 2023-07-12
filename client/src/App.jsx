@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useAppContext } from './context/appContext';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
@@ -6,8 +6,14 @@ import { Home, ModifyUser, Register, Error, ProtectedRoute } from './pages';
 
 import { BackgroundDiv } from './components';
 
+import { useTranslation } from 'react-i18next';
+
 const App = () => {
+	const { i18n } = useTranslation();
 	const { isDarkMode } = useAppContext();
+	const [language, setLanguage] = useState(
+		localStorage.getItem('language') || 'en'
+	);
 
 	useEffect(() => {
 		if (isDarkMode) {
@@ -15,7 +21,11 @@ const App = () => {
 		} else {
 			document.documentElement.classList.remove('dark');
 		}
-	}, [isDarkMode]);
+
+		// const html = document.documentElement;
+		// html.lang = language;
+		// html.setAttribute('dir', language === 'ar' ? 'rtl' : 'ltr');
+	}, [isDarkMode, language]);
 
 	return (
 		<BrowserRouter>

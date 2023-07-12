@@ -2,6 +2,7 @@
 
 .note-form {
 	@include flexLayout(center, space-between);
+	flex-direction: var(--flex-direction);
 	gap: 1.2rem;
 
 	input {
@@ -17,9 +18,14 @@
 	}
 
 	button {
-		width: 40%;
+		width: 50%;
 		padding-inline: 1rem;
 		border-radius: 5px;
+		transition: var(--transition-time);
+
+		&:hover {
+			scale: 1.1;
+		}
 	}
 }
 
@@ -32,11 +38,13 @@
 
 .note {
 	@include flexLayout(center, space-between);
+	flex-direction: var(--flex-direction);
 	width: 100%;
 	margin-block-start: 1.2rem;
 
 	& > div {
 		@include flexLayout(center, space-between);
+		flex-direction: var(--flex-direction);
 		gap: 2.4rem;
 	}
 
@@ -63,6 +71,7 @@
 	color: var(--clr-todo);
 	font-size: 1.6rem;
 	@include flexLayout(center, space-between);
+	flex-direction: var(--flex-direction);
 
 	span {
 		margin-inline-end: auto;

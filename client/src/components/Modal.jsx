@@ -11,7 +11,7 @@ const Modal = () => {
 
 	return (
 		isModalOpen && (
-			<div className='nav__modal'>
+			<div className='nav__modal' onClick={e => e.stopPropagation()}>
 				<h3>{'Hi ' + user.username + '!'}</h3>
 				<button
 					className='btn btn-block nav__mode-info-btn'

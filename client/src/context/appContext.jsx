@@ -1,4 +1,5 @@
-import { useReducer, useContext, createContext, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useReducer, useContext, createContext, useState } from 'react';
 import axios from 'axios';
 
 const URL = 'http://localhost:5000/api/v1';
@@ -25,7 +26,6 @@ import {
 const token = localStorage.getItem('token');
 const user = localStorage.getItem('user');
 const darkMode = localStorage.getItem('darkMode');
-// const userLanguage = localStorage.getItem('userLaunguage');
 
 const initialState = {
 	user: user ? JSON.parse(user) : null,
@@ -41,13 +41,16 @@ const initialState = {
 
 	notes: [],
 	totalActiveNotes: 0,
-	// language: userLanguage ? JSON.parse(userLanguage) : 'en',
 };
 
 const AppContext = createContext(initialState);
 
 const AppProvider = ({ children }) => {
 	const [state, dispatch] = useReducer(reducer, initialState);
+	const { t, i18n } = useTranslation();
+	const [language, setLanguage] = useState(
+		localStorage.getItem('language') || 'en'
+	);
 
 	const authFetch = axios.create({
 		baseURL: URL,
@@ -199,6 +202,7 @@ const AppProvider = ({ children }) => {
 				toggleDarkMode,
 				authFetch,
 				fetchNotes,
+				language,
 			}}>
 			{children}
 		</AppContext.Provider>

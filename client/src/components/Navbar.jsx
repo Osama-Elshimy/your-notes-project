@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useAppContext } from '../context/appContext';
 import { useTranslation } from 'react-i18next';
 
@@ -8,8 +9,15 @@ import UserLogo from '/assets/images/user.svg';
 
 const Navbar = () => {
 	const { t, i18n } = useTranslation();
-	const { openModal, closeModal, isModalOpen, isDarkMode, toggleDarkMode } =
-		useAppContext();
+	const {
+		openModal,
+		closeModal,
+		isModalOpen,
+		isDarkMode,
+		toggleDarkMode,
+		language,
+		// changeLanguage,
+	} = useAppContext();
 
 	const handleOpenModal = () => {
 		if (isModalOpen) {
@@ -21,11 +29,19 @@ const Navbar = () => {
 		}
 	};
 
+	useEffect(() => {
+		if (language === 'ar') {
+			i18n.changeLanguage('ar');
+			document.documentElement.setAttribute('dir', 'rtl');
+		}
+	}, [language]);
+
 	const toggleLanguage = () => {
-		i18n.changeLanguage(i18n.language === 'ar' ? 'en' : 'ar');
 		const html = document.documentElement;
+		i18n.changeLanguage(i18n.language === 'ar' ? 'en' : 'ar');
 		html.lang = i18n.language;
-		html.classList.toggle('arabic');
+		html.setAttribute('dir', i18n.language === 'ar' ? 'rtl' : 'ltr');
+		localStorage.setItem('language', i18n.language);
 	};
 
 	return (
