@@ -6,14 +6,12 @@ import { useAppContext } from '../context/appContext';
 import { useTranslation } from 'react-i18next';
 
 import Card from './Card';
-
 const NoteList = () => {
 	const { t } = useTranslation();
 
 	const { authFetch, fetchNotes, notes } = useAppContext();
 	const [filteredNotes, setFilteredNotes] = useState([]);
 	const [filter, setFilter] = useState('all');
-	// const [totalActiveNotes, setTotalActiveNotes] = useState(0);
 
 	useEffect(() => {
 		fetchNotes();
@@ -23,27 +21,9 @@ const NoteList = () => {
 		setFilteredNotes(notes);
 	}, [notes]);
 
-	// const sortNotes = notes => {
-	// 	const completedNotes = notes.filter(note => note.completed);
-	// 	const activeNotes = notes.filter(note => !note.completed);
-
-	// 	return [...activeNotes, ...completedNotes];
-	// };
-
 	const handleToggleNote = async id => {
 		try {
 			await authFetch.patch(`/notes/${id}/toggle`);
-
-			// setFilteredNotes(prevNotes => {
-			// 	const updatedNotes = prevNotes.map(note => {
-			// 		if (note._id === id) {
-			// 			return { ...note, completed: !note.completed };
-			// 		}
-			// 		return note;
-			// 	});
-
-			// 	return sortNotes(updatedNotes);
-			// });
 
 			await fetchNotes();
 		} catch (error) {

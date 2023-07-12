@@ -35,7 +35,7 @@ const Navbar = () => {
 
 				<button className='nav__dark-mode-button' onClick={toggleDarkMode}>
 					<img
-						src={isDarkMode ? DarkModeLogo : BrightModeLogo}
+						src={isDarkMode ? BrightModeLogo : DarkModeLogo}
 						alt='dark-mode'
 					/>
 				</button>
