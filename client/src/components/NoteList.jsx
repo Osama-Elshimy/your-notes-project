@@ -151,7 +151,7 @@ const NoteList = () => {
 					{activeNotesNumber > 0 && (
 						<span>
 							{activeNotesNumber > 1
-								? `${activeNotesNumber}  t('kept-notes') `
+								? `${activeNotesNumber}  ${t('kept-notes')} `
 								: t('one-single-note')}
 						</span>
 					)}

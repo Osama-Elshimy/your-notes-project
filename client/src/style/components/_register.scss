@@ -12,6 +12,7 @@
 }
 
 .register__logo {
+	position: relative;
 	@include flexLayout();
 	flex-direction: column;
 	background-image: var(--clr-ingredient);
@@ -91,4 +92,13 @@
 		color: var(--clr-grey-regular);
 		background-color: var(--clr-ingredient);
 	}
+}
+
+.btn-lang {
+	position: absolute;
+	color: var(--clr-bg-card);
+	bottom: 1rem;
+	left: 2rem;
+	font-size: 3.2rem;
+	font-weight: var(--font-weight-500);
 }

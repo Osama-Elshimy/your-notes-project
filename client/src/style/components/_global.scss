@@ -70,4 +70,9 @@ html[lang='ar'] {
 	.form__btn[type='submit'] {
 		flex-direction: row-reverse;
 	}
+
+	.btn-lang {
+		left: auto;
+		right: 2rem;
+	}
 }

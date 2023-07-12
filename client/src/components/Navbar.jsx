@@ -1,22 +1,17 @@
-import { useEffect } from 'react';
-import { useAppContext } from '../context/appContext';
 import { useTranslation } from 'react-i18next';
+import { useAppContext } from '../context/appContext';
 
+import LanguageButton from './LanguageButton';
 import Logo from './Logo';
 import BrightModeLogo from '/assets/images/bright-mode.svg';
 import DarkModeLogo from '/assets/images/dark-mode.svg';
 import UserLogo from '/assets/images/user.svg';
 
 const Navbar = () => {
-	const { t, i18n } = useTranslation();
-	const {
-		openModal,
-		closeModal,
-		isModalOpen,
-		isDarkMode,
-		toggleDarkMode,
-		language,
-	} = useAppContext();
+	const { t } = useTranslation();
+
+	const { openModal, closeModal, isModalOpen, isDarkMode, toggleDarkMode } =
+		useAppContext();
 
 	const handleOpenModal = () => {
 		if (isModalOpen) {
@@ -28,14 +23,6 @@ const Navbar = () => {
 		}
 	};
 
-	const toggleLanguage = () => {
-		const html = document.documentElement;
-		i18n.changeLanguage(i18n.language === 'ar' ? 'en' : 'ar');
-		html.lang = i18n.language;
-		html.setAttribute('dir', i18n.language === 'ar' ? 'rtl' : 'ltr');
-		localStorage.setItem('language', i18n.language);
-	};
-
 	return (
 		<nav className='nav'>
 			<div className='nav__logo'>
@@ -44,7 +31,7 @@ const Navbar = () => {
 			</div>
 
 			<div className='nav__buttons'>
-				<button onClick={toggleLanguage}>{t('language')}</button>
+				<LanguageButton />
 
 				<button className='nav__dark-mode-button' onClick={toggleDarkMode}>
 					<img

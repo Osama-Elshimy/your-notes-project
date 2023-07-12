@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
 import { useAppContext } from '../context/appContext';
-import { Logo, FormRow, Alert } from '../components';
+import { Logo, FormRow, Alert, LanguageButton } from '../components';
 
 const initialState = {
 	username: '',
@@ -127,6 +127,7 @@ const Register = () => {
 			<div className='register__logo'>
 				<Logo width='7rem' height='7rem' />
 				<h1>{t('title')}</h1>
+				<LanguageButton classes='btn-lang' />
 			</div>
 
 			<div className='register__form'>

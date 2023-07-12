@@ -7,6 +7,7 @@ import BackgroundDiv from './BackgroundDiv';
 import Card from './Card';
 import Modal from './Modal';
 import NoteList from './NoteList';
+import LanguageButton from './LanguageButton';
 
 export {
 	Logo,
@@ -18,4 +19,5 @@ export {
 	Card,
 	Modal,
 	NoteList,
+	LanguageButton,
 };
