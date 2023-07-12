@@ -47,7 +47,7 @@ app.use('/api/v1/notes', authenticateUser, notesRouter);
 
 // only when ready to deploy
 app.get('*', (req, res) => {
-	res.sendFile(path.resolve(__dirname, './client/build', 'index.html'));
+	res.sendFile(path.resolve(__dirname, './client/dist', 'index.html'));
 });
 
 app.use(notFoundMiddleware);
