@@ -1,7 +1,7 @@
 import { useReducer, useContext, createContext, useState } from 'react';
 import axios from 'axios';
 
-const URL = 'http://localhost:5000/api/v1';
+const URL = '/api/v1';
 import reducer from './reducer';
 
 import {
