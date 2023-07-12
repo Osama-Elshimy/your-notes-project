@@ -16,7 +16,6 @@ const Navbar = () => {
 		isDarkMode,
 		toggleDarkMode,
 		language,
-		// changeLanguage,
 	} = useAppContext();
 
 	const handleOpenModal = () => {
@@ -29,12 +28,13 @@ const Navbar = () => {
 		}
 	};
 
-	useEffect(() => {
-		if (language === 'ar') {
-			i18n.changeLanguage('ar');
-			document.documentElement.setAttribute('dir', 'rtl');
-		}
-	}, [language]);
+	// useEffect(() => {
+	// 	if (language === 'ar') {
+	// 		i18n.changeLanguage('ar');
+	// 		document.documentElement.lang = 'ar';
+	// 		document.documentElement.setAttribute('dir', 'rtl');
+	// 	}
+	// }, [language]);
 
 	const toggleLanguage = () => {
 		const html = document.documentElement;

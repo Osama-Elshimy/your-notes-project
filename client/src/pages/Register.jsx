@@ -16,7 +16,7 @@ const initialState = {
 };
 
 const Register = () => {
-	const { t, i18n } = useTranslation();
+	const { t } = useTranslation();
 	const navigate = useNavigate();
 
 	const [values, setValues] = useState(initialState);
@@ -133,16 +133,17 @@ const Register = () => {
 				<form className='form' onSubmit={onSubmit}>
 					<h2>
 						{values.isMember
-							? 'Login'
+							? t('login')
 							: formStep === 1
-							? 'Signup'
-							: 'Complete Signup'}
+							? t('signup')
+							: t('complete-signup')}
 					</h2>
 
 					{showAlert && <Alert />}
 
 					{formStep === 1 && (
 						<FormRow
+							labelText={t('email')}
 							type='email'
 							name='email'
 							value={values.email}
@@ -152,6 +153,7 @@ const Register = () => {
 
 					{formStep === 1 && (
 						<FormRow
+							labelText={t('password')}
 							type='password'
 							name='password'
 							value={values.password}
@@ -161,7 +163,7 @@ const Register = () => {
 
 					{formStep === 1 && !values.isMember && (
 						<FormRow
-							labelText='Confirm Password'
+							labelText={t('confirm-password')}
 							type='password'
 							name='confirmPassword'
 							value={values.confirmPassword}
@@ -171,6 +173,7 @@ const Register = () => {
 
 					{formStep === 2 && !values.isMember && (
 						<FormRow
+							labelText={t('username')}
 							type='text'
 							name='username'
 							value={values.username}
@@ -180,6 +183,7 @@ const Register = () => {
 
 					{formStep === 2 && !values.isMember && (
 						<FormRow
+							labelText={t('phone')}
 							type='text'
 							name='phone'
 							value={values.phone}
@@ -189,7 +193,7 @@ const Register = () => {
 
 					{formStep === 2 && !values.isMember && (
 						<FormRow
-							labelText='Birth Year'
+							labelText={t('birth-year')}
 							type='text'
 							name='birthYear'
 							value={values.birthYear}
@@ -201,13 +205,13 @@ const Register = () => {
 
 					{values.isMember && (
 						<button className='btn btn-block form__btn' type='submit'>
-							Login
+							{t('login')}
 						</button>
 					)}
 
 					{!values.isMember && (
 						<button className='btn btn-block form__btn' type='submit'>
-							Complete Signup
+							{t('complete-signup')}
 							<svg
 								width='17'
 								height='17'
@@ -237,7 +241,7 @@ const Register = () => {
 							className='btn btn-block form__btn'
 							type='button'
 							onClick={() => stetFormStep(1)}>
-							Back
+							{t('back')}
 							<svg
 								width='17'
 								height='17'
@@ -262,11 +266,9 @@ const Register = () => {
 						</button>
 					)}
 				</form>
-				<p>
-					{!values.isMember ? 'Already a member?' : "Don't have an account?"}
-				</p>
+				<p>{!values.isMember ? t('member') : t('new-member')}</p>
 				<button className='btn btn-switch' onClick={toggleMember}>
-					{values.isMember ? 'Signup' : 'Login'}
+					{values.isMember ? t('signup') : t('login')}
 				</button>
 			</div>
 		</section>

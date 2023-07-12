@@ -1,25 +1,24 @@
-// import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useAppContext } from '../context/appContext';
 
 const Modal = () => {
 	const navigate = useNavigate();
-	// const [isInsideModifyPage, setIsInsideModifyPage] = useState(false);
+	const { t } = useTranslation();
 
-	const { openModal, closeModal, isModalOpen, user, logoutUser } =
-		useAppContext();
+	const { closeModal, isModalOpen, user, logoutUser } = useAppContext();
 
 	return (
 		isModalOpen && (
 			<div className='nav__modal' onClick={e => e.stopPropagation()}>
-				<h3>{'Hi ' + user.username + '!'}</h3>
+				<h3>{t('welcome') + ' ' + user.username + '!'}</h3>
 				<button
 					className='btn btn-block nav__mode-info-btn'
 					onClick={() => {
 						navigate('/modifyuser');
 						closeModal();
 					}}>
-					Modify User Info
+					{t('modify-user')}
 				</button>
 				<button
 					className='btn btn-block nav__mode-info-btn'
@@ -27,10 +26,10 @@ const Modal = () => {
 						navigate('/');
 						closeModal();
 					}}>
-					Home Page
+					{t('home-page')}
 				</button>
 				<button className='btn btn-block' type='submit' onClick={logoutUser}>
-					Logout
+					{t('logout')}
 				</button>
 			</div>
 		)

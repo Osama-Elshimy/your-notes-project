@@ -60,3 +60,14 @@ button[type='submit'] {
 	background-color: var(--clr-text-primary);
 	color: var(--clr-text-second);
 }
+
+html[lang='ar'] {
+	.nav__modal {
+		left: 2rem;
+		right: auto;
+	}
+
+	.form__btn[type='submit'] {
+		flex-direction: row-reverse;
+	}
+}

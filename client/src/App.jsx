@@ -10,10 +10,7 @@ import { useTranslation } from 'react-i18next';
 
 const App = () => {
 	const { i18n } = useTranslation();
-	const { isDarkMode } = useAppContext();
-	const [language, setLanguage] = useState(
-		localStorage.getItem('language') || 'en'
-	);
+	const { isDarkMode, language } = useAppContext();
 
 	useEffect(() => {
 		if (isDarkMode) {
@@ -22,9 +19,11 @@ const App = () => {
 			document.documentElement.classList.remove('dark');
 		}
 
-		// const html = document.documentElement;
-		// html.lang = language;
-		// html.setAttribute('dir', language === 'ar' ? 'rtl' : 'ltr');
+		if (language === 'ar') {
+			i18n.changeLanguage('ar');
+			document.documentElement.lang = 'ar';
+			document.documentElement.setAttribute('dir', 'rtl');
+		}
 	}, [isDarkMode, language]);
 
 	return (

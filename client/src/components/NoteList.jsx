@@ -151,14 +151,14 @@ const NoteList = () => {
 					<button
 						className={filter === 'active' ? 'active' : ''}
 						onClick={() => handleFilterChange('active')}>
-						Active
+						{t('active')}
 					</button>
 					<button
 						className={filter === 'completed' ? 'active' : ''}
 						onClick={() => handleFilterChange('completed')}>
-						Completed
+						{t('completed')}
 					</button>
-					<button onClick={clearCompleted}>Clear Completed</button>
+					<button onClick={clearCompleted}>{t('clear-completed')}</button>
 				</div>
 			</Card>
 		</>
