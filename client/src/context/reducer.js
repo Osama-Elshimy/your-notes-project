@@ -14,10 +14,6 @@ import {
 	TOGGLE_DARK_MODE,
 	GET_NOTES_BEGIN,
 	GET_NOTES_SUCCESS,
-	CREATE_NOTE_BEGIN,
-	CREATE_NOTE_SUCCESS,
-	CREATE_NOTE_ERROR,
-	DELETE_NOTE,
 } from './actions';
 
 import { initialState } from './appContext';
@@ -131,30 +127,6 @@ const reducer = (state, action) => {
 		};
 	}
 
-	if (action.type === CREATE_NOTE_BEGIN) {
-		return { ...state, isLoading: true };
-	}
-
-	if (action.type === CREATE_NOTE_SUCCESS) {
-		return {
-			...state,
-			isLoading: false,
-			showAlert: true,
-			alertType: 'success',
-			alertText: 'New Note Created!',
-		};
-	}
-
-	if (action.type === CREATE_NOTE_ERROR) {
-		return {
-			...state,
-			isLoading: false,
-			showAlert: true,
-			alertType: 'danger',
-			alertText: action.payload.msg,
-		};
-	}
-
 	if (action.type === GET_NOTES_BEGIN) {
 		return { ...state, isLoading: true, showAlert: false };
 	}
@@ -164,12 +136,7 @@ const reducer = (state, action) => {
 			...state,
 			isLoading: false,
 			notes: action.payload.notes,
-			// totalActiveNotes: action.payload.totalActiveNotes,
 		};
-	}
-
-	if (action.type === DELETE_NOTE) {
-		return { ...state, isLoading: true };
 	}
 
 	throw new Error(`No such action: ${action.type}`);

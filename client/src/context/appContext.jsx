@@ -20,15 +20,12 @@ import {
 	TOGGLE_DARK_MODE,
 	GET_NOTES_BEGIN,
 	GET_NOTES_SUCCESS,
-	CREATE_NOTE_BEGIN,
-	CREATE_NOTE_SUCCESS,
-	CREATE_NOTE_ERROR,
-	DELETE_NOTE,
 } from './actions';
 
 const token = localStorage.getItem('token');
 const user = localStorage.getItem('user');
 const darkMode = localStorage.getItem('darkMode');
+// const userLanguage = localStorage.getItem('userLaunguage');
 
 const initialState = {
 	user: user ? JSON.parse(user) : null,
@@ -40,10 +37,11 @@ const initialState = {
 	alertType: '',
 
 	isModalOpen: false,
-	isDarkMode: darkMode ? JSON.parse(darkMode) : false,
+	isDarkMode: darkMode ? JSON.parse(darkMode) : 'false',
 
 	notes: [],
 	totalActiveNotes: 0,
+	// language: userLanguage ? JSON.parse(userLanguage) : 'en',
 };
 
 const AppContext = createContext(initialState);
@@ -187,39 +185,6 @@ const AppProvider = ({ children }) => {
 		}
 	};
 
-	//
-	//
-
-	const createNote = async content => {
-		dispatch({ type: CREATE_NOTE_BEGIN });
-
-		try {
-			await authFetch.post('/notes', { content });
-
-			dispatch({
-				type: CREATE_NOTE_SUCCESS,
-			});
-		} catch (error) {
-			if (error.response.status === 401) return;
-
-			dispatch({
-				type: CREATE_NOTE_ERROR,
-				payload: { msg: error.response.data.msg },
-			});
-		}
-	};
-
-	const deleteNote = async noteId => {
-		dispatch({ type: DELETE_NOTE });
-
-		try {
-			await authFetch.delete(`/notes/${noteId}`);
-			fetchNotes();
-		} catch (error) {
-			logoutUser();
-		}
-	};
-
 	return (
 		<AppContext.Provider
 			value={{
@@ -234,10 +199,6 @@ const AppProvider = ({ children }) => {
 				toggleDarkMode,
 				authFetch,
 				fetchNotes,
-				createNote,
-				//
-				//
-				deleteNote,
 			}}>
 			{children}
 		</AppContext.Provider>

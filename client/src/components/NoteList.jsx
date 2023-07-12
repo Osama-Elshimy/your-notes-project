@@ -5,10 +5,8 @@ import { useAppContext } from '../context/appContext';
 import Card from './Card';
 
 const Note = ({ id, content, completed, onToggle, onDelete }) => {
-	const { deleteNote } = useAppContext();
-
 	return (
-		<div className={`${completed ? `todo completed` : `todo`}`}>
+		<div className={`${completed ? `note completed` : `note`}`}>
 			<div>
 				<button onClick={() => onToggle(id)}>
 					{completed ? (
@@ -38,7 +36,7 @@ const Note = ({ id, content, completed, onToggle, onDelete }) => {
 				</button>
 				<p>{content}</p>
 			</div>
-			<button onClick={() => deleteNote(id)}>
+			<button onClick={() => onDelete(id)}>
 				<svg
 					width='19'
 					height='19'
@@ -58,52 +56,99 @@ const Note = ({ id, content, completed, onToggle, onDelete }) => {
 };
 
 const NoteList = () => {
-	const {
-		authFetch,
-		fetchNotes,
-		notes: notesFROMAPI,
-		createNote,
-	} = useAppContext();
+	const { authFetch, fetchNotes, notes } = useAppContext();
+	const [filteredNotes, setFilteredNotes] = useState([]);
+	const [filter, setFilter] = useState('all');
+	const [totalActiveNotes, setTotalActiveNotes] = useState(0);
 
 	useEffect(() => {
 		fetchNotes();
-		// setNotes()
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-	const [notes, setNotes] = useState(notesFROMAPI);
+	useEffect(() => {
+		setFilteredNotes(notes);
+	}, [notes]);
 
-	const handleAddNote = async content => {
-		try {
-			const response = await authFetch.post('/notes', {
-				content,
-			});
+	const sortNotes = notes => {
+		const completedNotes = notes.filter(note => note.completed);
+		const activeNotes = notes.filter(note => !note.completed);
 
-			const newNote = response.data;
-			setNotes(prevNotes => [newNote, ...prevNotes]);
-
-			fetchNotes();
-		} catch (error) {
-			console.error('Error adding todo:', error);
-		}
+		return [...activeNotes, ...completedNotes];
 	};
 
 	const handleToggleNote = async id => {
 		try {
 			await authFetch.patch(`/notes/${id}/toggle`);
 
-			setNotes(prevNotes =>
-				prevNotes.map(note => {
-					if (note.id === id) {
+			setFilteredNotes(prevNotes => {
+				const updatedNotes = prevNotes.map(note => {
+					if (note._id === id) {
 						return { ...note, completed: !note.completed };
 					}
 					return note;
-				})
+				});
+
+				return sortNotes(updatedNotes);
+			});
+		} catch (error) {
+			console.error('Error toggling todo:', error);
+		}
+	};
+
+	const handleFilterChange = filter => {
+		setFilter(filter);
+		switch (filter) {
+			case 'all':
+				setFilteredNotes(notes);
+				break;
+			case 'completed':
+				setFilteredNotes(notes.filter(note => note.completed));
+				break;
+			case 'active':
+				setFilteredNotes(notes.filter(note => !note.completed));
+				break;
+			default:
+				setFilteredNotes(notes);
+				break;
+		}
+	};
+
+	const clearCompleted = async () => {
+		try {
+			const completedNoteIds = notes
+				.filter(note => note.completed)
+				.map(note => note._id);
+
+			await Promise.all(
+				completedNoteIds.map(id => authFetch.delete(`/notes/${id}`))
 			);
 
 			fetchNotes();
 		} catch (error) {
-			console.error('Error toggling todo:', error);
+			console.error('Error deleting completed notes:', error);
+		}
+	};
+
+	const createNote = async content => {
+		try {
+			const response = await authFetch.post('/notes', { content });
+			const { note } = response.data;
+			setFilteredNotes(prevNotes => {
+				return [note, ...prevNotes];
+			});
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
+	const deleteNote = async noteId => {
+		try {
+			await authFetch.delete(`/notes/${noteId}`);
+			setFilteredNotes(prevNotes => {
+				return prevNotes.filter(note => note._id !== noteId);
+			});
+		} catch (error) {
+			console.error('Error deleting note:', error);
 		}
 	};
 
@@ -111,7 +156,7 @@ const NoteList = () => {
 		e.preventDefault();
 		const content = e.target.note.value;
 		if (content) {
-			handleAddNote(content);
+			createNote(content);
 			e.target.note.value = '';
 		}
 	};
@@ -127,19 +172,38 @@ const NoteList = () => {
 				</form>
 			</Card>
 			<Card className='card card-note'>
-				{notes.map(note => {
+				{filteredNotes.map(note => {
 					return (
 						<Note
-							key={note._id}
+							key={note.id}
 							id={note._id}
 							content={note.content}
 							completed={note.completed}
 							onToggle={handleToggleNote}
+							onDelete={deleteNote}
 						/>
 					);
 				})}
 
-				<div>state</div>
+				<div className='note-actions'>
+					<span>{notes.filter(note => !note.completed).length} Items left</span>
+					<button
+						className={filter === 'all' ? 'active' : ''}
+						onClick={() => handleFilterChange('all')}>
+						All
+					</button>
+					<button
+						className={filter === 'active' ? 'active' : ''}
+						onClick={() => handleFilterChange('active')}>
+						Active
+					</button>
+					<button
+						className={filter === 'completed' ? 'active' : ''}
+						onClick={() => handleFilterChange('completed')}>
+						Completed
+					</button>
+					<button onClick={clearCompleted}>Clear Completed</button>
+				</div>
 			</Card>
 		</>
 	);

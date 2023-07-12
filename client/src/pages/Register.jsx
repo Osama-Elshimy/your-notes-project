@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 import { useAppContext } from '../context/appContext';
 import { Logo, FormRow, Alert } from '../components';
@@ -15,6 +16,7 @@ const initialState = {
 };
 
 const Register = () => {
+	const { t, i18n } = useTranslation();
 	const navigate = useNavigate();
 
 	const [values, setValues] = useState(initialState);
@@ -118,11 +120,13 @@ const Register = () => {
 		}
 	}, [user, navigate]);
 
+	if (isLoaing) return <h1>Loading...</h1>;
+
 	return (
 		<section className='register'>
 			<div className='register__logo'>
 				<Logo width='7rem' height='7rem' />
-				<h1>Your Notes</h1>
+				<h1>{t('title')}</h1>
 			</div>
 
 			<div className='register__form'>

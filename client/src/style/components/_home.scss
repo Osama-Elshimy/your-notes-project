@@ -28,16 +28,12 @@
 	flex-direction: column;
 	padding-block: 3.6rem;
 	margin-block-start: 2.4rem;
-
-	& > div {
-		color: var(--clr-todo);
-		font-size: 2rem;
-	}
 }
 
-.todo {
+.note {
 	@include flexLayout(center, space-between);
 	width: 100%;
+	margin-block-start: 1.2rem;
 
 	& > div {
 		@include flexLayout(center, space-between);
@@ -50,7 +46,7 @@
 	}
 }
 
-.todo.completed {
+.note.completed {
 	p {
 		text-decoration: line-through;
 		opacity: 0.5;
@@ -59,4 +55,33 @@
 	circle {
 		fill: var(--clr-pink);
 	}
+}
+
+.note-actions {
+	width: 100%;
+	margin-block-start: 3.6rem;
+	color: var(--clr-todo);
+	font-size: 1.6rem;
+	@include flexLayout(center, space-between);
+
+	span {
+		margin-inline-end: auto;
+	}
+
+	button:not(:last-of-type) {
+		margin-inline-end: 1.2rem;
+	}
+
+	button:last-of-type {
+		margin-inline-start: auto;
+	}
+
+	* {
+		font-size: 1.6rem;
+	}
+}
+
+.active {
+	color: var(--clr-text-primary);
+	font-weight: var(--font-weight-700);
 }
