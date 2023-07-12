@@ -24,4 +24,4 @@ YourNotes is a full-stack MERN (MongoDB, Express, React, Node.js) project that a
 - HTML/CSS: Standard web technologies used for structuring and styling the application.
 - JavaScript: The primary programming language used for the application's functionality.
   
-## [Live Demo](https://jobify-vcx2.onrender.com/)  
+## [Live Demo](https://your-notes-lo50.onrender.com/register)  
