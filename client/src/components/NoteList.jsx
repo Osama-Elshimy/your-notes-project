@@ -23,27 +23,29 @@ const NoteList = () => {
 		setFilteredNotes(notes);
 	}, [notes]);
 
-	const sortNotes = notes => {
-		const completedNotes = notes.filter(note => note.completed);
-		const activeNotes = notes.filter(note => !note.completed);
+	// const sortNotes = notes => {
+	// 	const completedNotes = notes.filter(note => note.completed);
+	// 	const activeNotes = notes.filter(note => !note.completed);
 
-		return [...activeNotes, ...completedNotes];
-	};
+	// 	return [...activeNotes, ...completedNotes];
+	// };
 
 	const handleToggleNote = async id => {
 		try {
 			await authFetch.patch(`/notes/${id}/toggle`);
 
-			setFilteredNotes(prevNotes => {
-				const updatedNotes = prevNotes.map(note => {
-					if (note._id === id) {
-						return { ...note, completed: !note.completed };
-					}
-					return note;
-				});
+			// setFilteredNotes(prevNotes => {
+			// 	const updatedNotes = prevNotes.map(note => {
+			// 		if (note._id === id) {
+			// 			return { ...note, completed: !note.completed };
+			// 		}
+			// 		return note;
+			// 	});
 
-				return sortNotes(updatedNotes);
-			});
+			// 	return sortNotes(updatedNotes);
+			// });
+
+			await fetchNotes();
 		} catch (error) {
 			console.error('Error toggling todo:', error);
 		}
@@ -90,6 +92,8 @@ const NoteList = () => {
 			setFilteredNotes(prevNotes => {
 				return [note, ...prevNotes];
 			});
+
+			await fetchNotes();
 		} catch (error) {
 			console.log(error);
 		}
@@ -101,6 +105,8 @@ const NoteList = () => {
 			setFilteredNotes(prevNotes => {
 				return prevNotes.filter(note => note._id !== noteId);
 			});
+
+			fetchNotes();
 		} catch (error) {
 			console.error('Error deleting note:', error);
 		}
@@ -114,6 +120,8 @@ const NoteList = () => {
 			e.target.note.value = '';
 		}
 	};
+
+	const activeNotesNumber = notes.filter(note => !note.completed).length;
 
 	return (
 		<>
@@ -140,9 +148,13 @@ const NoteList = () => {
 				})}
 
 				<div className='note-actions'>
-					<span>
-						{notes.filter(note => !note.completed).length} {t('kept-notes')}
-					</span>
+					{activeNotesNumber > 0 && (
+						<span>
+							{activeNotesNumber > 1
+								? `${activeNotesNumber}  t('kept-notes') `
+								: t('one-single-note')}
+						</span>
+					)}
 					<button
 						className={filter === 'all' ? 'active' : ''}
 						onClick={() => handleFilterChange('all')}>

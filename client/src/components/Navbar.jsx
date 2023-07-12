@@ -28,14 +28,6 @@ const Navbar = () => {
 		}
 	};
 
-	// useEffect(() => {
-	// 	if (language === 'ar') {
-	// 		i18n.changeLanguage('ar');
-	// 		document.documentElement.lang = 'ar';
-	// 		document.documentElement.setAttribute('dir', 'rtl');
-	// 	}
-	// }, [language]);
-
 	const toggleLanguage = () => {
 		const html = document.documentElement;
 		i18n.changeLanguage(i18n.language === 'ar' ? 'en' : 'ar');
@@ -61,7 +53,21 @@ const Navbar = () => {
 					/>
 				</button>
 				<button className='nav__user-button' onClick={handleOpenModal}>
-					<img src={UserLogo} alt='user' />
+					<svg
+						width='28'
+						height='26'
+						viewBox='0 0 28 26'
+						fill='none'
+						xmlns='http://www.w3.org/2000/svg'>
+						<path
+							d='M27.5821 25.6668V22.0913C27.5821 20.1948 26.8556 18.3759 25.5624 17.0349C24.2693 15.6938 22.5154 14.9404 20.6866 14.9404H6.89552C5.06672 14.9404 3.31281 15.6938 2.01965 17.0349C0.72649 18.3759 0 20.1948 0 22.0913V25.6668'
+							fill='#D375B9'
+						/>
+						<path
+							d='M13.791 12.2587C17.1761 12.2587 19.9203 9.5145 19.9203 6.12935C19.9203 2.7442 17.1761 0 13.791 0C10.4058 0 7.66162 2.7442 7.66162 6.12935C7.66162 9.5145 10.4058 12.2587 13.791 12.2587Z'
+							fill='#D375B9'
+						/>
+					</svg>
 				</button>
 			</div>
 		</nav>
