@@ -25,5 +25,7 @@
 	"username": "اسم المستخدم",
 	"phone": "رقم الهاتف",
 	"birth-year": "سنة الميلاد",
-	"save-changes": "حفظ التعديلات"
+	"save-changes": "حفظ التعديلات",
+	"edit-note": "تعديل",
+	"save-note": "تأكيد"
 }

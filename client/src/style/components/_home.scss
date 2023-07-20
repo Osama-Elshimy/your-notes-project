@@ -1,21 +1,9 @@
 @use '../abstracts/' as *;
 
-.note-form {
+.note__form {
 	@include flexLayout(center, space-between);
 	flex-direction: var(--flex-direction);
 	gap: 1.2rem;
-
-	input {
-		background-color: inherit;
-		border-color: transparent;
-		font-size: 2rem;
-		width: 100%;
-		padding-inline: 1rem;
-
-		&::placeholder {
-			opacity: 0.5;
-		}
-	}
 
 	button {
 		width: 50%;
@@ -26,6 +14,18 @@
 		&:hover {
 			scale: 1.1;
 		}
+	}
+}
+
+.note__form-input {
+	background-color: inherit;
+	border-color: transparent;
+	font-size: 2rem;
+	width: 100%;
+	padding-inline: 1rem;
+
+	&::placeholder {
+		opacity: 0.5;
 	}
 }
 

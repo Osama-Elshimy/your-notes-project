@@ -6,6 +6,7 @@ import { useAppContext } from '../context/appContext';
 import { useTranslation } from 'react-i18next';
 
 import Card from './Card';
+
 const NoteList = () => {
 	const { t } = useTranslation();
 
@@ -79,6 +80,15 @@ const NoteList = () => {
 		}
 	};
 
+	const editNote = async (id, content) => {
+		try {
+			await authFetch.patch(`/notes/${id}/update`, { content });
+			fetchNotes();
+		} catch (error) {
+			console.error('Error editing note:', error);
+		}
+	};
+
 	const deleteNote = async noteId => {
 		try {
 			await authFetch.delete(`/notes/${noteId}`);
@@ -106,8 +116,13 @@ const NoteList = () => {
 	return (
 		<>
 			<Card className='card'>
-				<form onSubmit={handleSubmit} className='note-form'>
-					<input type='text' name='note' placeholder={t('note-placeholder')} />
+				<form onSubmit={handleSubmit} className='note__form'>
+					<input
+						className='note__form-input'
+						type='text'
+						name='note'
+						placeholder={t('note-placeholder')}
+					/>
 					<button type='submit' className='btn'>
 						{t('add-note')}
 					</button>
@@ -123,6 +138,7 @@ const NoteList = () => {
 							completed={note.completed}
 							onToggle={handleToggleNote}
 							onDelete={deleteNote}
+							onEdit={editNote}
 						/>
 					);
 				})}

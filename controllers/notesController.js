@@ -57,6 +57,8 @@ const toggleNoteCompletion = async (req, res) => {
 			throw new NotFoundError(`No note with id :${noteId}`);
 		}
 
+		checkPermissions(req.user, note.createdBy);
+
 		note.completed = !note.completed;
 		await note.save();
 
@@ -66,4 +68,33 @@ const toggleNoteCompletion = async (req, res) => {
 	}
 };
 
-export { createNote, deleteNote, getAllNotes, toggleNoteCompletion };
+const updateNote = async (req, res) => {
+	const { id: noteId } = req.params;
+
+	const { content } = req.body;
+
+	if (!content) {
+		throw new BadRequestError('Please provide a content');
+	}
+
+	const note = await Note.findOne({ _id: noteId });
+
+	if (!note) {
+		throw new NotFoundError(`No note with id :${noteId}`);
+	}
+
+	checkPermissions(req.user, note.createdBy);
+
+	note.content = content;
+	await note.save();
+
+	res.status(200).json({ note });
+};
+
+export {
+	createNote,
+	deleteNote,
+	getAllNotes,
+	toggleNoteCompletion,
+	updateNote,
+};

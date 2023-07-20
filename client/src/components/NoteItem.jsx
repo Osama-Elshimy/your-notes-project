@@ -1,4 +1,22 @@
-const NoteItem = ({ id, content, completed, onToggle, onDelete }) => {
+import { useState } from 'react';
+
+import { useTranslation } from 'react-i18next';
+
+const NoteItem = ({ id, content, completed, onToggle, onDelete, onEdit }) => {
+	const { t } = useTranslation();
+
+	const [isEditing, setIsEditing] = useState(false);
+	const [editedContent, setEditedContent] = useState(content);
+
+	const handleEdit = () => {
+		setIsEditing(true);
+	};
+
+	const handleSave = () => {
+		onEdit(id, editedContent);
+		setIsEditing(false);
+	};
+
 	return (
 		<div className={`${completed ? `note completed` : `note`}`}>
 			<div>
@@ -28,23 +46,44 @@ const NoteItem = ({ id, content, completed, onToggle, onDelete }) => {
 						</svg>
 					)}
 				</button>
-				<p>{content}</p>
+
+				{isEditing ? (
+					<>
+						<input
+							className='note__form-input'
+							type='text'
+							value={editedContent}
+							onChange={e => setEditedContent(e.target.value)}
+							autoFocus={true}
+						/>
+					</>
+				) : (
+					<p>{content}</p>
+				)}
 			</div>
-			<button onClick={() => onDelete(id)}>
-				<svg
-					width='19'
-					height='19'
-					viewBox='0 0 19 19'
-					fill='none'
-					xmlns='http://www.w3.org/2000/svg'>
-					<path
-						fillRule='evenodd'
-						clipRule='evenodd'
-						d='M18.9997 0.728582L18.2711 0L9.89263 8.37849L1.51424 9.40386e-05L0.785654 0.728676L9.16405 9.10707L0.785156 17.486L1.51374 18.2145L9.89263 9.83565L18.2716 18.2146L19.0002 17.4861L10.6212 9.10707L18.9997 0.728582Z'
-						fill='#494C6B'
-					/>
-				</svg>
-			</button>
+
+			<div>
+				{isEditing ? (
+					<button onClick={handleSave}>{t('save-note')}</button>
+				) : (
+					<button onClick={handleEdit}>{t('edit-note')}</button>
+				)}
+				<button onClick={() => onDelete(id)}>
+					<svg
+						width='19'
+						height='19'
+						viewBox='0 0 19 19'
+						fill='none'
+						xmlns='http://www.w3.org/2000/svg'>
+						<path
+							fillRule='evenodd'
+							clipRule='evenodd'
+							d='M18.9997 0.728582L18.2711 0L9.89263 8.37849L1.51424 9.40386e-05L0.785654 0.728676L9.16405 9.10707L0.785156 17.486L1.51374 18.2145L9.89263 9.83565L18.2716 18.2146L19.0002 17.4861L10.6212 9.10707L18.9997 0.728582Z'
+							fill='#494C6B'
+						/>
+					</svg>
+				</button>
+			</div>
 		</div>
 	);
 };

@@ -25,5 +25,7 @@
 	"username": "Username",
 	"phone": "phone",
 	"birth-year": "birthYear",
-	"save-changes": "Save Changes"
+	"save-changes": "Save Changes",
+	"edit-note": "Edit",
+	"save-note": "Save"
 }
